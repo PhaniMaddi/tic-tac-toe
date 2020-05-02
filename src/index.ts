@@ -4,7 +4,7 @@
  */
 import express from "express";
 import path from "path";
-import { rootHandler, helloHandler } from "./handlers";
+import { rootHandler, helloHandler } from "./routes/handlers";
 
 const app = express();
 const port = process.env.PORT || "8000";

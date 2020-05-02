@@ -25,17 +25,72 @@
     </div>
 
     <div class="game-board">
-      <div class="grid">X</div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
-      <div class="grid"></div>
     </div>
   </div>
+
+  <script type="text/javascript" src="gameplay.js"></script>
+  <script type="text/javascript">
+    const player = "x";
+    const game = new TicTacToe(player);
+    game.initializeBoard();
+    let board = populateBoard(game.getBoard());
+    document
+      .getElementsByClassName("game-board")[0]
+      .insertAdjacentHTML("afterbegin", board);
+
+    // called everytime a player clicks on a grid
+    function registerPlay(obj) {
+      let value = game.getCurrentPlayer();
+      let row = obj.getAttribute("data-row");
+      let column = obj.getAttribute("data-column");
+
+      console.log(row);
+      console.log(column);
+      console.log(value);
+
+      console.log(game.getBoard());
+      console.log(game.isBoardFull());
+      game.placeMark(Number(row), Number(column));
+      game.changePlayer();
+
+      let updatedBoard = populateBoard(game.getBoard());
+      let gameElement = document.getElementsByClassName("game-board")[0];
+      gameElement.innerHTML = "";
+      gameElement.insertAdjacentHTML("afterbegin", updatedBoard);
+
+      if (game.isWinner()) {
+        console.log("we have a winner");
+        // TODO: show the result and reset the game
+      } else if (game.isBoardFull()) {
+        console.log("this game is a draw");
+      }
+    }
+
+    function populateBoard(board) {
+      let result = [];
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+          let value = board[i][j];
+          let disabled = value !== '-';
+
+          result.push(
+            `
+            <div 
+              class="grid ${disabled ? "disabled" : "enabled"}"" 
+              data-row="${i}"
+              data-column="${j}"
+              onclick="registerPlay(this)"
+            >
+              ${disabled ? board[i][j] : ""}
+            </div>
+            `
+          )
+        }
+      }
+
+      return result.join("");
+    }
+  </script>
 </body>
 
 </html>
