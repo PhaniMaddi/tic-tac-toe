@@ -13,17 +13,26 @@ class Game {
 
   initializeGame() {
     this.game.initializeBoard();
-    const board = this.populateBoard(this.game.getBoard());
-    let html = document.getElementsByClassName("game-board")[0];
-
-    html.innerHTML = "";
-    html.insertAdjacentHTML("afterbegin", board);
+    this.populateGameInfo();
+    this.populateBoard(this.game.getBoard());
   }
 
-  selectPlayer(obj) {
-    const player = obj.getAttribute("value");
-    this.game = new TicTacToe(player);
-    this.initializeGame();
+  registerPlay(row, column) {
+    this.gameState.latestPlay = [Number(row), Number(column)];
+    this.game.placeMark(Number(row), Number(column));
+
+    this.populateBoard(this.game.getBoard());
+
+    if (this.game.isWinner() || this.game.isBoardFull()) {
+      // reset the game
+      this.populateGameInfo();
+      setTimeout(() => {
+        this.initializeGame();
+      }, 5000);
+    } else {
+      this.game.changePlayer();
+      this.populateGameInfo();
+    }
   }
 
   populateBoard(board) {
@@ -49,7 +58,7 @@ class Game {
           }" 
           data-row="${i}"
           data-column="${j}"
-          onclick="newGame.registerPlay(this)"
+          onclick="registerPlay(this)"
         >
           ${disabled ? board[i][j] : ""}
         </div>
@@ -58,36 +67,27 @@ class Game {
       }
     }
 
-    return result.join("");
+    let html = document.getElementsByClassName("game-board")[0];
+    html.innerHTML = "";
+    html.insertAdjacentHTML("afterbegin", result.join(""));
   }
 
-  registerPlay(obj) {
-    let value = this.game.getCurrentPlayer();
-    let row = obj.getAttribute("data-row");
-    let column = obj.getAttribute("data-column");
-
-    this.gameState.latestPlay = [Number(row), Number(column)];
-    this.game.placeMark(Number(row), Number(column));
-
-    let updatedBoard = this.populateBoard(this.game.getBoard());
-    let gameElement = document.getElementsByClassName("game-board")[0];
-    gameElement.innerHTML = "";
-    gameElement.insertAdjacentHTML("afterbegin", updatedBoard);
+  populateGameInfo() {
+    let player = this.game.getCurrentPlayer();
+    let gameInfo = `${player} to play`;
 
     if (this.game.isWinner()) {
-      console.log(`${this.game.getCurrentPlayer()} is the winner`);
-      // reset the game
-      this.initializeGame();
-      // TODO: show the result and reset the game
-    } else if (this.game.isBoardFull()) {
-      // reset the game
-      this.initializeGame();
-      console.log("this game is a draw");
-    } else {
-      this.game.changePlayer();
+      gameInfo = `
+      <div>${player} is the winner. Game will restart in 5 secs</div>
+      `;
+    } else if (!this.game.isWinner() && this.game.isBoardFull()) {
+      gameInfo = `
+      <div>This game was a draw. Game will restart in 5 secs</div>
+      `;
     }
+
+    let gameElement = document.getElementsByClassName("game-info")[0];
+    gameElement.innerHTML = "";
+    gameElement.insertAdjacentHTML("afterbegin", gameInfo);
   }
 }
-
-const newGame = new Game("x");
-newGame.initializeGame();

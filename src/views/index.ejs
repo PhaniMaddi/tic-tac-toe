@@ -20,12 +20,12 @@
     <div class="select-player">
       <ul>
         <li>
-          <input type="radio" id="x-player" name="player" value="x" onclick="newGame.selectPlayer(this)" checked>
+          <input type="radio" id="x-player" name="player" value="x" onclick="selectPlayer(this)" checked>
           <label for="x-player">X</label>
           <div class="check"></div>
         </li>
         <li>
-          <input type="radio" id="o-player" name="player" value="o" onclick="newGame.selectPlayer(this)">
+          <input type="radio" id="o-player" name="player" value="o" onclick="selectPlayer(this)">
           <label for="o-player">O</label>
           <div class="check">
             <div class="inside"></div>
@@ -36,10 +36,35 @@
     </div>
 
     <div class="game-board"></div>
+    <div class="game-info"></div>
   </div>
 
+  <!-- dev -->
   <script type="text/javascript" src="gameplay.js"></script>
+  <!-- <script type="text/javascript" src="./gameplay.js"></script> -->
   <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript">
+    let newGame;
+    function startGame(player) {
+      newGame = new Game(player);
+      newGame.initializeGame();
+    }
+
+    function selectPlayer(obj) {
+      const player = obj.getAttribute("value");
+      startGame(player);
+    }
+
+    function registerPlay(obj) {
+      let row = obj.getAttribute("data-row");
+      let column = obj.getAttribute("data-column");
+
+      newGame.registerPlay(row, column);
+    }
+
+    // initializing game with player x
+    startGame("x");
+  </script>
 </body>
 
 </html>
