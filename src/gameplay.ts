@@ -80,23 +80,21 @@ export class TicTacToe {
   private checkRows(): boolean {
     const board: string[][] = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[0][0], board[0][1], board[0][2])) {
+      if (this.checkRowCol(board[i][0], board[i][1], board[i][2])) {
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
 
   private checkColumns(): boolean {
     const board: string[][] = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[0][0], board[1][0], board[2][0])) {
+      if (this.checkRowCol(board[0][i], board[1][i], board[2][i])) {
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
 
   private checkDiagonals(): boolean {

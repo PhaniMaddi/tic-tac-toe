@@ -69,22 +69,20 @@ class TicTacToe {
   checkRows() {
     const board = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[0][0], board[0][1], board[0][2])) {
+      if (this.checkRowCol(board[i][0], board[i][1], board[i][2]) === true) {
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
   checkColumns() {
     const board = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[0][0], board[1][0], board[2][0])) {
+      if (this.checkRowCol(board[0][i], board[1][i], board[2][i]) === true) {
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
   checkDiagonals() {
     const board = this.board;
