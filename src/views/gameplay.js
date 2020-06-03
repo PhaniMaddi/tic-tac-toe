@@ -1,9 +1,11 @@
 "use strict";
-
 class TicTacToe {
-  constructor(player) {
+  constructor(player, gameType) {
     this.board = [];
     this.currentPlayer = player;
+    this.opponent = player === "x" ? "o" : "x";
+    this.gameType = gameType;
+    this.computerPlay = new ComputerPlay(this.opponent, this.currentPlayer);
   }
   /**
    * initializeBoard
@@ -35,12 +37,26 @@ class TicTacToe {
   /**
    * placeMark
    */
-  placeMark(row, col) {
+  placeMarker(row, col) {
     if (this.board[row][col] === "-") {
       this.board[row][col] = this.currentPlayer;
       return true;
     }
   }
+
+  /**
+   * playComputerHand
+   */
+  playComputerHand() {
+    const { row, col } = this.computerPlay.findBestMove(
+      JSON.parse(JSON.stringify(this.board))
+    );
+
+    this.board[row][col] = this.opponent;
+  }
+  /**
+   * getCurrentPlayer
+   */
   getCurrentPlayer() {
     return this.currentPlayer;
   }
@@ -57,7 +73,6 @@ class TicTacToe {
         }
       }
     }
-
     return emptyCount === 0;
   }
   /**
@@ -69,7 +84,7 @@ class TicTacToe {
   checkRows() {
     const board = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[i][0], board[i][1], board[i][2]) === true) {
+      if (this.checkRowCol(board[i][0], board[i][1], board[i][2])) {
         return true;
       }
     }
@@ -78,7 +93,7 @@ class TicTacToe {
   checkColumns() {
     const board = this.board;
     for (let i = 0; i < 3; i++) {
-      if (this.checkRowCol(board[0][i], board[1][i], board[2][i]) === true) {
+      if (this.checkRowCol(board[0][i], board[1][i], board[2][i])) {
         return true;
       }
     }

@@ -1,9 +1,18 @@
+import { ComputerPlay } from "./computerPlay";
+
 export class TicTacToe {
   board: string[][] = [];
-  currentPlayer: string = "";
+  currentPlayer: string;
+  opponent: string;
+  gameType: string;
+  computerPlay: any;
 
-  constructor(player: string) {
+  constructor(player: string, gameType: string) {
     this.currentPlayer = player;
+    this.opponent = player === "x" ? "o" : "x";
+    this.gameType = gameType;
+
+    this.computerPlay = new ComputerPlay(this.currentPlayer, this.opponent);
   }
 
   /**
@@ -44,6 +53,17 @@ export class TicTacToe {
       this.board[row][col] = this.currentPlayer;
       return true;
     }
+  }
+
+  /**
+   * playComputerHand
+   */
+  public playComputerHand() {
+    const { row, col } = this.computerPlay.findBestMove(
+      JSON.parse(JSON.stringify(this.board))
+    );
+
+    this.board[row][col] = this.opponent;
   }
 
   /**

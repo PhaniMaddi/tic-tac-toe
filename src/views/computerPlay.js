@@ -1,17 +1,14 @@
+"use strict";
 /**
  * Reference:
  * https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
  */
-
-export class ComputerPlay {
-  player: string;
-  opponent: string;
-  constructor(player: string, opponent: string) {
+class ComputerPlay {
+  constructor(player, opponent) {
     this.player = player;
     this.opponent = opponent;
   }
-
-  private anyMovesLeft(board: string[][]): boolean {
+  anyMovesLeft(board) {
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board.length; j++) {
         if (board[i][j] === "-") {
@@ -19,11 +16,9 @@ export class ComputerPlay {
         }
       }
     }
-
     return false;
   }
-
-  private evaluate(board: string[][]): number {
+  evaluate(board) {
     // check all rows
     for (let row = 0; row < board.length; row++) {
       if (board[row][0] === board[row][1] && board[row][1] === board[row][2]) {
@@ -34,7 +29,6 @@ export class ComputerPlay {
         }
       }
     }
-
     // check all columns
     for (let col = 0; col < board.length; col++) {
       if (board[0][col] === board[1][col] && board[1][col] === board[2][col]) {
@@ -45,7 +39,6 @@ export class ComputerPlay {
         }
       }
     }
-
     if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
       if (board[0][0] === this.player) {
         return +10;
@@ -53,7 +46,6 @@ export class ComputerPlay {
         return -10;
       }
     }
-
     if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
       if (board[0][2] === this.player) {
         return +10;
@@ -62,18 +54,14 @@ export class ComputerPlay {
       }
     }
   }
-
-  private minimax(board: string[][], depth: number, isMax: boolean) {
-    let score: number = this.evaluate(board);
-
+  minimax(board, depth, isMax) {
+    let score = this.evaluate(board);
     if (score === 10 || score === -10) {
       return score;
     }
-
     if (this.anyMovesLeft(board) === false) {
       return 0;
     }
-
     // If is is maximizer's move
     if (isMax) {
       let best = -1000;
@@ -84,13 +72,11 @@ export class ComputerPlay {
             // Call minimax recursively and choose
             // the maximum value
             best = Math.max(best, this.minimax(board, depth + 1, !isMax));
-
             // Undo the move
             board[i][j] = "-";
           }
         }
       }
-
       return best;
     } else {
       // If this minimizer's move
@@ -102,18 +88,15 @@ export class ComputerPlay {
             // Call minimax recursively and choose
             // the minimum value
             best = Math.min(best, this.minimax(board, depth + 1, !isMax));
-
             // Undo the move
             board[i][j] = "-";
           }
         }
       }
-
       return best;
     }
   }
-
-  public findBestMove(board: string[][]) {
+  findBestMove(board) {
     let bestVal = -1000;
     let bestMove = {
       row: -1,
@@ -126,9 +109,7 @@ export class ComputerPlay {
           board[i][j] = this.player;
 
           let moveVal = this.minimax(board, 0, false);
-
           board[i][j] = "-";
-
           if (moveVal > bestVal) {
             bestVal = moveVal;
             bestMove.row = i;
@@ -137,7 +118,6 @@ export class ComputerPlay {
         }
       }
     }
-
     return bestMove;
   }
 }

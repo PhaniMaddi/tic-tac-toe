@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const computerPlay_1 = require("./computerPlay");
 class TicTacToe {
-    constructor(player) {
+    constructor(player, gameType) {
         this.board = [];
-        this.currentPlayer = "";
         this.currentPlayer = player;
+        this.opponent = player === "x" ? "o" : "x";
+        this.gameType = gameType;
+        this.computerPlay = new computerPlay_1.ComputerPlay(this.board, this.currentPlayer, this.opponent);
     }
     /**
      * initializeBoard
@@ -37,9 +40,13 @@ class TicTacToe {
     /**
      * placeMark
      */
-    placeMark(row, col) {
-        if (this.board[row][col] === "-") {
-            this.board[row][col] = this.currentPlayer;
+    registerMove(r, c) {
+        if (this.board[r][c] === "-") {
+            this.board[r][c] = this.currentPlayer;
+            if (this.gameType === "single") {
+                const { row, col } = this.computerPlay.findBestMove(this.board);
+                this.board[row][col] = this.currentPlayer;
+            }
             return true;
         }
     }
