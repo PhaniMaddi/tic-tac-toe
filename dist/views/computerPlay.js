@@ -4,10 +4,7 @@
  * https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-3-tic-tac-toe-ai-finding-optimal-move/
  */
 class ComputerPlay {
-  constructor(board, player, opponent) {
-    this.player = "x";
-    this.opponent = "o";
-    this.board = board;
+  constructor(player, opponent) {
     this.player = player;
     this.opponent = opponent;
   }
@@ -59,10 +56,10 @@ class ComputerPlay {
   }
   minimax(board, depth, isMax) {
     let score = this.evaluate(board);
-    if (score) {
+    if (score === 10 || score === -10) {
       return score;
     }
-    if (!this.anyMovesLeft(board)) {
+    if (this.anyMovesLeft(board) === false) {
       return 0;
     }
     // If is is maximizer's move
@@ -72,12 +69,12 @@ class ComputerPlay {
         for (let j = 0; j < 3; j++) {
           if (board[i][j] === "-") {
             board[i][j] = this.player;
+            // Call minimax recursively and choose
+            // the maximum value
+            best = Math.max(best, this.minimax(board, depth + 1, !isMax));
+            // Undo the move
+            board[i][j] = "-";
           }
-          // Call minimax recursively and choose
-          // the maximum value
-          best = Math.max(best, this.minimax(board, depth + 1, !isMax));
-          // Undo the move
-          board[i][j] = "-";
         }
       }
       return best;
@@ -88,12 +85,12 @@ class ComputerPlay {
         for (let j = 0; j < 3; j++) {
           if (board[i][j] === "-") {
             board[i][j] = this.opponent;
+            // Call minimax recursively and choose
+            // the minimum value
+            best = Math.min(best, this.minimax(board, depth + 1, !isMax));
+            // Undo the move
+            board[i][j] = "-";
           }
-          // Call minimax recursively and choose
-          // the minimum value
-          best = Math.min(best, this.minimax(board, depth + 1, !isMax));
-          // Undo the move
-          board[i][j] = "-";
         }
       }
       return best;
@@ -105,17 +102,19 @@ class ComputerPlay {
       row: -1,
       col: -1,
     };
+
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[i][j] === "-") {
           board[i][j] = this.player;
-        }
-        let moveVal = this.minimax(board, 0, false);
-        board[i][j] = "-";
-        if (moveVal > bestVal) {
-          bestVal = moveVal;
-          bestMove.row = i;
-          bestMove.col = j;
+
+          let moveVal = this.minimax(board, 0, false);
+          board[i][j] = "-";
+          if (moveVal > bestVal) {
+            bestVal = moveVal;
+            bestMove.row = i;
+            bestMove.col = j;
+          }
         }
       }
     }

@@ -5,10 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 class ComputerPlay {
-    constructor(board, player, opponent) {
-        this.player = "x";
-        this.opponent = "o";
-        this.board = board;
+    constructor(player, opponent) {
         this.player = player;
         this.opponent = opponent;
     }
@@ -64,10 +61,10 @@ class ComputerPlay {
     }
     minimax(board, depth, isMax) {
         let score = this.evaluate(board);
-        if (score) {
+        if (score === 10 || score === -10) {
             return score;
         }
-        if (!this.anyMovesLeft(board)) {
+        if (this.anyMovesLeft(board) === false) {
             return 0;
         }
         // If is is maximizer's move
@@ -115,13 +112,13 @@ class ComputerPlay {
             for (let j = 0; j < 3; j++) {
                 if (board[i][j] === "-") {
                     board[i][j] = this.player;
-                }
-                let moveVal = this.minimax(board, 0, false);
-                board[i][j] = "-";
-                if (moveVal > bestVal) {
-                    bestVal = moveVal;
-                    bestMove.row = i;
-                    bestMove.col = j;
+                    let moveVal = this.minimax(board, 0, false);
+                    board[i][j] = "-";
+                    if (moveVal > bestVal) {
+                        bestVal = moveVal;
+                        bestMove.row = i;
+                        bestMove.col = j;
+                    }
                 }
             }
         }

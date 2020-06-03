@@ -2,13 +2,14 @@ class Game {
   gameState = {};
   game = null;
 
-  constructor(player) {
+  constructor(player, gameType) {
     this.gameState = {
       player,
+      gameType,
       latestPlay: [],
     };
 
-    this.game = new TicTacToe(this.gameState.player);
+    this.game = new TicTacToe(this.gameState.player, this.gameState.gameType);
   }
 
   initializeGame() {
@@ -19,20 +20,22 @@ class Game {
 
   registerPlay(row, column) {
     this.gameState.latestPlay = [Number(row), Number(column)];
-    this.game.placeMark(Number(row), Number(column));
-
+    this.game.placeMarker(Number(row), Number(column));
     this.populateBoard(this.game.getBoard());
 
     if (this.game.isWinner() || this.game.isBoardFull()) {
       // reset the game
-      this.populateGameInfo();
       setTimeout(() => {
         this.initializeGame();
-      }, 5000);
+      }, 3000);
+    } else if (this.gameState.gameType === "single") {
+      this.game.playComputerHand();
+      this.populateBoard(this.game.getBoard());
     } else {
       this.game.changePlayer();
-      this.populateGameInfo();
     }
+
+    this.populateGameInfo();
   }
 
   populateBoard(board) {

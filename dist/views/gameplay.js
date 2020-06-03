@@ -5,11 +5,7 @@ class TicTacToe {
     this.currentPlayer = player;
     this.opponent = player === "x" ? "o" : "x";
     this.gameType = gameType;
-    this.computerPlay = new ComputerPlay(
-      this.board,
-      this.currentPlayer,
-      this.opponent
-    );
+    this.computerPlay = new ComputerPlay(this.opponent, this.currentPlayer);
   }
   /**
    * initializeBoard
@@ -41,15 +37,22 @@ class TicTacToe {
   /**
    * placeMark
    */
-  registerMove(r, c) {
-    if (this.board[r][c] === "-") {
-      this.board[r][c] = this.currentPlayer;
-      if (this.gameType === "single") {
-        const { row, col } = this.computerPlay.findBestMove(this.board);
-        this.board[row][col] = this.currentPlayer;
-      }
+  placeMarker(row, col) {
+    if (this.board[row][col] === "-") {
+      this.board[row][col] = this.currentPlayer;
       return true;
     }
+  }
+
+  /**
+   * playComputerHand
+   */
+  playComputerHand() {
+    const { row, col } = this.computerPlay.findBestMove(
+      JSON.parse(JSON.stringify(this.board))
+    );
+
+    this.board[row][col] = this.opponent;
   }
   /**
    * getCurrentPlayer
